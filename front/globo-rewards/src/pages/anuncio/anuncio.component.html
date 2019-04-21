@@ -45,7 +45,7 @@
         </div>
         <div class="col-md-8 gap-top15">
             <select class="form-control" [(ngModel)]="programa">
-                <option *ngFor="let programa of programas" value="programa._id">{{programa.nome}}</option>
+                <option *ngFor="let programa of programas" value="{{programa._id}}">{{programa.nome}}</option>
             </select>
         </div>
     </div>
@@ -55,13 +55,13 @@
         </div>
         <div class="col-md-8 gap-top15">
             <select class="form-control" [(ngModel)]="atividade">
-                <option *ngFor="let atividade of atividades" value="atividade._id">{{atividade.tipoAtividade}}</option>
+                <option *ngFor="let atividade of atividades" value="{{atividade._id}}">{{atividade.tipoAtividade}}</option>
             </select>
         </div>
     </div>
     <div class="row gap-top15">
         <div class="col-md-offset-4 col-md-4 text-left">
-            <input type="button" class="form-control btn-primary" value="SALVAR" (click)="salvar()" />
+            <input type="button" class="form-control btn-primary" value="SALVAR" (click)="addAnuncio()" />
         </div>
     </div>
 
@@ -78,15 +78,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">FIAT</td>
-                        <td class="text-center">MAIS VOCÊ</td>
-                        <td class="text-center">ACESSO_URL</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">BOSCH</td>
-                        <td class="text-center">FAUSTÃO</td>
-                        <td class="text-center">ACESSO_URL</td>
+                    <tr *ngFor="let programaAnunciante of anunciantes">  
+                        <td class="text-center">{{programaAnunciante.anunciante}}</td>
+                        <td class="text-center">{{programaAnunciante.programa}}</td>
+                        <td class="text-center">{{programaAnunciante.atividade}}</td>
                     </tr>
                 </tbody>
             </table>

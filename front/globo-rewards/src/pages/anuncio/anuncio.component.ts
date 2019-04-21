@@ -22,7 +22,7 @@ export class AnuncioComponent implements OnInit {
     imagem: string;
     programa: string;
     atividade: string;
-
+    anunciantes: any [];
 
     constructor(
         public programaProvider: ProgramaProvider,
@@ -35,11 +35,11 @@ export class AnuncioComponent implements OnInit {
         this.getAtividades();
 
         // marca
-        // categoria
-        this.link = "";
-        this.imagem = "";
-        // programa
-        // atividade
+        this.categoria = "AUTOMOBILISTICA"
+        this.link = "https://www.youtube.com/watch?v=scvrzNOKjdM";
+        this.imagem = "https://www.sensorsexpo.com/sites/sensorsexpo/files/til_image/s17_eventicons3.png";
+        this.programa = "a57435360a4e19824bd2bede2d1758d5";
+        this.atividade = "f82255959faffa64e0e247b13e5c1d01";
     }
 
     public getProgramas() {
@@ -51,29 +51,20 @@ export class AnuncioComponent implements OnInit {
             });
     }
 
-
-
-
-
-
     public addAnuncio() {
         let anuncio =  {
             marca : this.marca,
             categoria: this.categoria,
             link: this.link,
-            image: this.imagem,
+            imagem: this.imagem,
             idPrograma: this.programa
         };
-        // marca
-        // categoria
-        // link
-        // imagem
-        // idPrograma
 
         this.programaProvider.addAnuncio(anuncio)
             .subscribe(res => {
                 console.log(res);
                 alert("Inserido com sucesso!");
+                this.getAnunciantes();
             }, err => {
 
             });
@@ -83,6 +74,16 @@ export class AnuncioComponent implements OnInit {
         this.atividadeProvider.getAtividades()
             .subscribe(res => {
                 this.atividades = res as Array<any>;
+                this.getAnunciantes();
+            }, err => {
+
+            });
+    }
+
+    public getAnunciantes() {
+        this.programaProvider.getAnunciantes()
+            .subscribe(res => {
+                this.anunciantes = res as Array<any>;
             }, err => {
 
             });

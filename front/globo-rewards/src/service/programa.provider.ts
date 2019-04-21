@@ -11,6 +11,7 @@ export class ProgramaProvider {
     private programaURL = "https://globo-rewards-api.mybluemix.net/programa"
 
     private anuncioURL = "https://globo-rewards-api.mybluemix.net/anuncio"
+    private anuncianteURL = "https://globo-rewards-api.mybluemix.net/programaAnunciante"
 
 
     getProgramas(): Observable<Object> {
@@ -28,4 +29,10 @@ export class ProgramaProvider {
             );
     }
 
+    getAnunciantes(): Observable<Object> {
+        return this.http.get(this.anuncianteURL)
+            .pipe(
+                (res => res)
+            );
+    }
 }

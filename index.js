@@ -21,14 +21,6 @@ let paramsCloudant = {
 };
 
 
-
-
-
-
-app.get('/', function (req, res) {
-     res.send("response");
-});
-
 app.get('/telespectador', function (req, res) {
     let query = {
         selector: {
@@ -126,6 +118,103 @@ app.get('/atividade/:idProgramaAnunciante', function (req, res) {
     request.then(function (result) {
         if (result[0] != undefined) {
             res.send(result);
+        } else {
+            res.send({});
+        }
+    })
+});
+
+app.get('/programaAnunciante', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "PROGRAMAANUNCIANTE",
+        }
+    };
+
+    let programasAnunciante = [];
+    let anunciantes = [];
+    let programas = [];
+    let atividades = [];
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (resultProgramaAnunciante) {
+        if (resultProgramaAnunciante[0] != undefined) {
+            programasAnunciante = resultProgramaAnunciante;
+
+            let query = {
+                selector: {
+                    tipo: "PROGRAMA",
+                }
+            };
+
+            let request = connFactory.getDocument(paramsCloudant, query)
+            request.then(function (resultPrograma) {
+                if (resultPrograma[0] != undefined) {
+                    programas = resultPrograma;
+                    let query = {
+                        selector: {
+                            tipo: "ANUNCIANTE",
+                        }
+                    };
+
+                    let request = connFactory.getDocument(paramsCloudant, query)
+                    request.then(function (resultAnunciante) {
+                        if (resultAnunciante[0] != undefined) {
+                            anunciantes = resultAnunciante;
+                            
+                            let query = {
+                                selector: {
+                                    tipo: "ATIVIDADE",
+                                }
+                            };
+
+                            let request = connFactory.getDocument(paramsCloudant, query)
+                            request.then(function (resultAtividade) {
+                                atividades = resultAtividade;
+
+                                if (resultAtividade[0] != undefined) {
+                                    for(let programaAnunciante of programasAnunciante) {
+                                        for(let programa of programas) {
+                                            if(programa._id == programaAnunciante.idPrograma) {
+                                                programaAnunciante.programa = programa.nome;
+                                            }
+                                        }
+        
+                                        for(let anunciante of anunciantes) {
+                                            if(anunciante._id == programaAnunciante.idAnunciante) {
+                                                programaAnunciante.anunciante = anunciante.marca;
+                                            }
+                                        }
+
+                                        for(let atividade of atividades) {
+                                            if(atividade._id == programaAnunciante.idAtividade) {
+                                                programaAnunciante.atividade = atividade.tipoAtividade;
+                                            }
+                                        }
+                                    }
+
+                                    res.send(programasAnunciante);
+                                } else {
+                                    res.send({});
+                                }
+    
+                                
+
+                            });
+
+                           
+        
+                        } else {
+                            res.send({});
+                        }
+                    })
+
+                } else {
+                    res.send({});
+                }
+            })
+
+
         } else {
             res.send({});
         }
@@ -249,6 +338,25 @@ app.post('/match', function (req, res) {
 });
 
 
+app.get('/atividade/id/:idAtividade', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "ATIVIDADE",
+            _id: req.params.idAtividade
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+        if (result[0] != undefined) {
+            res.send(result);
+        } else {
+            res.send({});
+        }
+     })
+});
+
+
 // {
 //     "_id": "a57435360a4e19824bd2bede2d1758d5",
 //     "_rev": "2-ed00f0eff6c4ca9a3f976a68838c5351",
@@ -358,6 +466,8 @@ app.post('/anuncio', function (req, res) {
         });
     });
 });
+
+app.use(express.static(__dirname + '/front/globo-rewards/dist/globo-rewards/'));
 
 var port = process.env.PORT || 3001
 app.listen(port, function () {
