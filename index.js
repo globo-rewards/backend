@@ -21,14 +21,14 @@ let paramsCloudant = {
 };
 
 
-// PROGRAMAANUNCIANTE
-// TELESPECTADOR
-// PROGRAMA
-// ANUNCIANTE
-// ATIVIDADE
+            // PROGRAMAANUNCIANTE
+            // TELESPECTADOR
+            // PROGRAMA
+            // ANUNCIANTE
+            // ATIVIDADE
 
 app.get('/', function (req, res) {
-    res.send("response");
+     res.send("response");
 });
 
 app.get('/telespectador', function (req, res) {
@@ -45,7 +45,7 @@ app.get('/telespectador', function (req, res) {
         } else {
             res.send({});
         }
-    })
+     })
 });
 
 app.get('/programa', function (req, res) {
@@ -62,7 +62,7 @@ app.get('/programa', function (req, res) {
         } else {
             res.send({});
         }
-    })
+     })
 });
 
 app.get('/anunciante', function (req, res) {
@@ -79,7 +79,7 @@ app.get('/anunciante', function (req, res) {
         } else {
             res.send({});
         }
-    })
+     })
 });
 
 app.get('/atividade', function (req, res) {
@@ -98,6 +98,116 @@ app.get('/atividade', function (req, res) {
         }
     })
 });
+    
+app.get('/match', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "MATCH"
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+        if (result[0] != undefined) {
+            res.send(result);
+        } else {
+            res.send({});
+        }
+    })
+});
+
+app.get('/atividade/:idProgramaAnunciante', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "PROGRAMAANUNCIANTE",
+            _id: (req.params.idProgramaAnunciante)
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+        if (result[0] != undefined) {
+            res.send(result);
+        } else {
+            res.send({});
+        }
+    })
+});
+
+app.get('/anuncio/:globoCode', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "PROGRAMA",
+            globo_code_offline: (req.params.globoCode)
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+
+
+
+        if (result != undefined) {
+            if (result[0]._id != undefined) {
+                query = {
+                    selector: {
+                        tipo: "PROGRAMAANUNCIANTE",
+                        idPrograma: (result[0]._id)
+                    }
+                };
+
+                request = connFactory.getDocument(paramsCloudant, query)
+                request.then(function (resultAnuncios) {
+                    if (resultAnuncios[0] != undefined) {
+
+                        let idProgramaAnunciante = "";
+
+                        let listRequest = [];
+                        for (let anuncio of resultAnuncios) {
+
+
+
+                            query = {
+                                selector: {
+                                    tipo: "ANUNCIANTE",
+                                    _id: anuncio.idAnunciante,
+
+                                }
+                            };
+
+                            listRequest.push(
+                                {
+                                    idProgramaAnunciante: anuncio._id,
+                                    anunciante: connFactory.getDocument(paramsCloudant, query)
+                                }
+                            )
+                        }
+
+                        Promise.all(listRequest.map(item => item.anunciante.then(anunciante => ({ item, anunciante })))).then(results => {
+                            let response = [];
+
+                            for (let result of results) {
+                                if (result.anunciante[0] != undefined) {
+                                    result.anunciante[0].idProgramaAnunciante = result.item.idProgramaAnunciante;
+                                    response.push(result.anunciante[0]);
+                                }
+                            }
+
+                            res.send(response);
+                        });
+                    } else {
+                        res.send({});
+                    }
+                })
+
+            }
+        }
+    })
+});
+
+
+
+
 
 
 
