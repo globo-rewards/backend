@@ -20,6 +20,11 @@ let paramsCloudant = {
     "password": "e373c010bcb53c3ea89a59f7fa2642789e7bfe3128bab1c3e2762b713ab04641"
 };
 
+
+
+
+
+
 app.get('/', function (req, res) {
      res.send("response");
 });
@@ -299,7 +304,63 @@ app.post('/telespectador', function (req, res) {
     });
 });
 
+// {
+//     idPrograma: '123',
+//     idAtividade: '123',
+//     marca: 'mememme'
+// }
+
+
+// enviar idPrograma
+// enviar idAtividade
+
+// {
+//     "_id": "marca",
+//     "marca": "BOSCH",
+//     "categoria": "automobilistico",
+//     "tipo": "ANUNCIANTE",
+//     "link": "1234",
+//     "imagem": "123123"
+//   }
+
+// {
+//     "idPrograma": "a57435360a4e19824bd2bede2d1758d5",
+//     "idAnunciante": "bd1a59780458be26aa59c90d299840e5",
+//     "status": "ATIVO",
+//     "idAtividade": "f82255959faffa64e0e247b13e5c1d01",
+//     "tipo": "PROGRAMAANUNCIANTE"
+//   }
+
+app.post('/anuncio', function (req, res) {
+
+    let anunciante = {
+        _id: req.body.marca,
+        marca: req.body.marca,
+        categoria: req.body.categoria,
+        tipo: "ANUNCIANTE",
+        link: req.body.link,
+        imagem: req.body.imagem
+    }
+
+    let programaanunciante = {
+        idPrograma: req.body.idPrograma,
+        idAnunciante: req.body.marca,
+        status: "ATIVO",
+        tipo: "PROGRAMAANUNCIANTE",
+        idAtividade: "f82255959faffa64e0e247b13e5c1d01",
+    }
+
+    let request = connFactory.insert(req, paramsCloudant, anunciante)
+    request.then(function (result) {
+        let request = connFactory.insert(req, paramsCloudant, programaanunciante)
+        request.then(function (result2) {
+            res.json(result2);
+        });
+    });
+});
+
 var port = process.env.PORT || 3001
 app.listen(port, function () {
     console.log("To view your app, open this link in your browser: http://localhost:" + port);
 });
+
