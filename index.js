@@ -20,13 +20,6 @@ let paramsCloudant = {
     "password": "e373c010bcb53c3ea89a59f7fa2642789e7bfe3128bab1c3e2762b713ab04641"
 };
 
-
-            // PROGRAMAANUNCIANTE
-            // TELESPECTADOR
-            // PROGRAMA
-            // ANUNCIANTE
-            // ATIVIDADE
-
 app.get('/', function (req, res) {
      res.send("response");
 });
@@ -144,9 +137,6 @@ app.get('/anuncio/:globoCode', function (req, res) {
 
     let request = connFactory.getDocument(paramsCloudant, query)
     request.then(function (result) {
-
-
-
         if (result != undefined) {
             if (result[0]._id != undefined) {
                 query = {
@@ -205,12 +195,109 @@ app.get('/anuncio/:globoCode', function (req, res) {
     })
 });
 
+// {
+//     "marca": "BOSCH",
+//     "categoria": "automobilistico",
+//     "tipo": "ANUNCIANTE",
+//     "link": "1234",
+//     "imagem": "123123"
+// }
+
+app.post('/anunciante', function (req, res) {
+    let request = connFactory.insert(req, paramsCloudant, req.body)
+    request.then(function (result) {
+        res.json(result);
+    });
+});
+
+// {
+//     "_id": "f82255959faffa64e0e247b13e5c1d01",
+//     "_rev": "2-0512be20a008c14d6f0baa1c848d9a31",
+//     "tipo": "ATIVIDADE",
+//     "tipoAtividade": "acesso_url",
+//     "estalecas": "5"
+//   }
+
+app.post('/atividade', function (req, res) {
+    let request = connFactory.insert(req, paramsCloudant, req.body)
+    request.then(function (result) {
+        res.json(result);
+    });
+});
+
+// {
+//     "_id": "ba5cbb781d27fcff8ad643bb78ea1461",
+//     "_rev": "3-0d867aabf9c959d04c8d8b9e94f5b528",
+//     "idTelespectador": "756bfa7969828a83afa71abb50a48727",
+//     "idProgramaAnunciante": "22c62de9d71d8ecc96120ab5d8dd9d58",
+//     "data_hora": "20/04/2019 08:30:00",
+//     "localizacao": "lat: 123, lng: 123",
+//     "idAtividade": "f82255959faffa64e0e247b13e5c1d01",
+//     "tipo": "MATCH"
+//   }
+
+app.post('/match', function (req, res) {
+    let request = connFactory.insert(req, paramsCloudant, req.body)
+    request.then(function (result) {
+        res.json(result);
+    });
+});
 
 
+// {
+//     "_id": "a57435360a4e19824bd2bede2d1758d5",
+//     "_rev": "2-ed00f0eff6c4ca9a3f976a68838c5351",
+//     "nome": "Mais você",
+//     "categoria": "Dia a Dia",
+//     "horario_inicio": "08:00",
+//     "horario_fim": "10:00",
+//     "dias_semana": "segunda, terca, quarta, quinta, sexta",
+//     "globo_code_online": "linkonline",
+//     "globo_code_offline": "linktest",
+//     "tipo": "PROGRAMA"
+// }
 
+app.post('/programa', function (req, res) {
+    let request = connFactory.insert(req, paramsCloudant, req.body)
+    request.then(function (result) {
+        res.json(result);
+    });
+});
 
+// {
+//     "_id": "22c62de9d71d8ecc96120ab5d8dd9d57",
+//     "_rev": "3-f69dbd1e8b6d527a705835f856f0ea9a",
+//     "idPrograma": "a57435360a4e19824bd2bede2d1758d5",
+//     "idAnunciante": "bd1a59780458be26aa59c90d299840e5",
+//     "status": "ATIVO",
+//     "idAtividade": "f82255959faffa64e0e247b13e5c1d01",
+//     "tipo": "PROGRAMAANUNCIANTE"
+// }
 
+app.post('/programaAnunciante', function (req, res) {
+    let request = connFactory.insert(req, paramsCloudant, req.body)
+    request.then(function (result) {
+        res.json(result);
+    });
+});
 
+// {
+//     "_id": "756bfa7969828a83afa71abb50a48727",
+//     "_rev": "1-0c90011580ce68e17e31b211068388bd",
+//     "email": "matheuscatossi@gmail.com",
+//     "nome": "Matheus Catossi",
+//     "idade": "21",
+//     "sexo": "Masculino",
+//     "estalecas": "25",
+//     "tipo": "TELESPECTADOR"
+// }
+
+app.post('/telespectador', function (req, res) {
+    let request = connFactory.insert(req, paramsCloudant, req.body)
+    request.then(function (result) {
+        res.json(result);
+    });
+});
 
 var port = process.env.PORT || 3001
 app.listen(port, function () {
