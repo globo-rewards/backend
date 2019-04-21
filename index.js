@@ -20,9 +20,86 @@ let paramsCloudant = {
     "password": "e373c010bcb53c3ea89a59f7fa2642789e7bfe3128bab1c3e2762b713ab04641"
 };
 
+
+// PROGRAMAANUNCIANTE
+// TELESPECTADOR
+// PROGRAMA
+// ANUNCIANTE
+// ATIVIDADE
+
 app.get('/', function (req, res) {
     res.send("response");
 });
+
+app.get('/telespectador', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "TELESPECTADOR"
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+        if (result[0] != undefined) {
+            res.send(result);
+        } else {
+            res.send({});
+        }
+    })
+});
+
+app.get('/programa', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "PROGRAMA"
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+        if (result[0] != undefined) {
+            res.send(result);
+        } else {
+            res.send({});
+        }
+    })
+});
+
+app.get('/anunciante', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "ANUNCIANTE"
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+        if (result[0] != undefined) {
+            res.send(result);
+        } else {
+            res.send({});
+        }
+    })
+});
+
+app.get('/atividade', function (req, res) {
+    let query = {
+        selector: {
+            tipo: "ATIVIDADE"
+        }
+    };
+
+    let request = connFactory.getDocument(paramsCloudant, query)
+    request.then(function (result) {
+        if (result[0] != undefined) {
+            res.send(result);
+        } else {
+            res.send({});
+        }
+    })
+});
+
+
 
 
 var port = process.env.PORT || 3001
